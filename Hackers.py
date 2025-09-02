@@ -18,12 +18,6 @@ from rich.table import Table
 
 console = Console()
 
-try:
-    from scapy.all import sniff, IP
-    has_scapy = True
-except ImportError:
-    has_scapy = False
-
 def type_message(message, delay=0.01, max_line_length=70):
     words = message.split()
     line = ""
@@ -181,35 +175,6 @@ def http_enum():
         type_message(f"Erro ao conectar ou analisar a URL: {e}")
     pause()
 
-def packet_sniffer():
-    if not has_scapy:
-        type_message("Biblioteca scapy não instalada, sniffer real não pode ser executado.")
-        pause()
-        return
-    try:
-        sniff(prn=lambda pkt: None, store=0, timeout=1)
-    except PermissionError:
-        type_message("Permissão negada (root necessário) para executar sniffer. Está desabilitado.")
-        pause()
-        return
-    except Exception as e:
-        type_message(f"Erro ao iniciar sniffer: {e}")
-        pause()
-        return
-
-    type_message("Sniffer de pacotes iniciado! Pressione CTRL+C para parar.")
-    def print_packet(pkt):
-        if IP in pkt:
-            src = pkt[IP].src
-            dst = pkt[IP].dst
-            proto = pkt[IP].proto
-            console.print(f"[green]Pacote:[/green] {src} -> {dst}   Protocolo: {proto}")
-    try:
-        sniff(prn=print_packet, store=0, timeout=30)
-    except KeyboardInterrupt:
-        type_message("Sniffer pausado pelo usuário.")
-    pause()
-
 def simple_brute_force():
     type_message("=== Brute Force funcional educativo (exemplo local, apenas aprendizado) ===")
     user = Prompt.ask("Usuário alvo (exemplo local)").strip()
@@ -227,7 +192,7 @@ def simple_brute_force():
     for pw in passwords:
         console.print(f"[green]Tentando senha:[/green] {pw}")
         time.sleep(0.3)
-        if pw == "senha123":
+        if pw == "senha123":  # Demonstração da senha correta
             type_message(f"Senha CRACKED! Usuário: {user} Senha: {pw}")
             break
     else:
@@ -275,17 +240,16 @@ def main_menu():
         console.print(Panel(contato_info, border_style="cyan"))
 
         options = [
-            "Ping Sweep - Descoberta de Hosts",
-            "Scanner de Portas TCP",
-            "Consulta DNS",
-            "Brute Force Local",
-            "Mostrar Processos CPU",
-            "Informações de Rede",
-            "GeoIP Lookup",
-            "Enumeração HTTP",
-            "Sniffer de Pacotes",
-            "Sobre e Créditos",
-            "Sair"
+            "1 - Ping Sweep - Descoberta de Hosts",
+            "2 - Scanner de Portas TCP",
+            "3 - Consulta DNS",
+            "4 - Brute Force Local",
+            "5 - Mostrar Processos CPU",
+            "6 - Informações de Rede",
+            "7 - GeoIP Lookup",
+            "8 - Enumeração HTTP",
+            "9 - Sobre e Créditos",
+            "0 - Sair"
         ]
 
         menu_table = Table.grid(padding=(0, 2))
@@ -351,12 +315,8 @@ def main_menu():
             http_enum()
         elif choice == "9":
             clear_screen()
-            type_message("Sniffer de pacotes simples (requer scapy).")
-            packet_sniffer()
-        elif choice == "10":
-            clear_screen()
             show_about()
-        elif choice == "11" or choice.lower() == "q":
+        elif choice == "0" or choice.lower() == "q":
             clear_screen()
             type_message("Obrigado por usar o Painel Doctor Coringa Lunático. Fique seguro e continue aprendendo!")
             break
