@@ -1,3 +1,4 @@
+
 import os
 import sys
 import socket
@@ -44,7 +45,8 @@ def system_info():
         ip_address = socket.gethostbyname(hostname)
     except:
         ip_address = 'N/A'
-    cpu_percent = psutil.cpu_percent(interval=1)
+    # Substitui psutil.cpu_percent(interval=1) por 0 para evitar erro de permissão no Termux
+    cpu_percent = 0
     mem = psutil.virtual_memory()
     mem_used = mem.used / (1024 ** 2)
     mem_total = mem.total / (1024 ** 2)
@@ -329,4 +331,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         clear_screen()
         console.print("[green]\nPrograma encerrado pelo usuário.[/green]")
-        
+            
