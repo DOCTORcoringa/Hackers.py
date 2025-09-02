@@ -25,7 +25,6 @@ from rich.text import Text
 
 console = Console()
 
-# Efeito digitação em verde
 def type_message(message, delay=0.01, max_line_length=70):
     words = message.split()
     line = ""
@@ -46,7 +45,6 @@ def clear_screen():
 def pause():
     Prompt.ask("[green]Pressione ENTER para voltar ao menu[/green]", default="", show_default=False)
 
-# Informações do sistema
 def system_info():
     hostname = socket.gethostname()
     try:
@@ -59,7 +57,6 @@ def system_info():
     mem_total = mem.total / (1024 ** 2)
     return (hostname, ip_address, cpu_percent, mem_used, mem_total)
 
-# Funcionalidades técnicas
 def ping(host):
     param = '-n' if os.name == 'nt' else '-c'
     command = ['ping', param, '1', host]
@@ -186,11 +183,23 @@ def http_enum():
     pause()
 
 def packet_sniffer():
-    type_message("Sniffer de pacotes iniciado! Pressione CTRL+C para parar.")
     if not has_scapy:
         type_message("Biblioteca scapy não instalada, sniffer real não pode ser executado.")
         pause()
         return
+    try:
+        # Testa permissões para sniff
+        sniff(prn=lambda pkt: None, store=0, timeout=1)
+    except PermissionError:
+        type_message("Permissão negada (root necessário) para executar sniffer. Está desabilitado.")
+        pause()
+        return
+    except Exception as e:
+        type_message(f"Erro ao iniciar sniffer: {e}")
+        pause()
+        return
+
+    type_message("Sniffer de pacotes iniciado! Pressione CTRL+C para parar.")
     def print_packet(pkt):
         if IP in pkt:
             src = pkt[IP].src
@@ -220,7 +229,7 @@ def simple_brute_force():
     for pw in passwords:
         console.print(f"[green]Tentando senha:[/green] {pw}")
         time.sleep(0.3)
-        if pw == "senha123":  # Demonstração da senha "correta"
+        if pw == "senha123":  # Demonstração da senha correta
             type_message(f"Senha CRACKED! Usuário: {user} Senha: {pw}")
             break
     else:
@@ -228,7 +237,7 @@ def simple_brute_force():
     pause()
 
 def show_about():
-    about_msg = ("""
+    about_msg = """
 [bold green]██████╗ ██████╗  ██████╗ ███╗   ██╗██████╗ ██╗ █████╗ ██████╗ ███████╗[/bold green]
 [bold green]██╔══██╗██╔══██╗██╔═══██╗████╗  ██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝[/bold green]
 [bold green]██████╔╝██████╔╝██║   ██║██╔██╗ ██║██████╔╝██║███████║██████╔╝█████╗  [/bold green]
@@ -239,7 +248,7 @@ def show_about():
 [green]Painel desenvolvido por Doctor Coringa Lunático
 Uso exclusivo para fins educacionais e aprendizado seguro
 Divirta-se explorando conceitos de segurança e hacking ético![/green]
-""")
+"""
     console.print(Panel(Align.center(about_msg), border_style="green"))
     pause()
 
@@ -281,7 +290,7 @@ def main_menu():
             "Sair"
         ]
 
-        menu_table = Table.grid(padding=(0,2))
+        menu_table = Table.grid(padding=(0, 2))
         menu_table.title = "[bold green]Menu Principal - Escolha a Opção[/bold green]"
         menu_table.expand = False
         cols = 2
@@ -289,7 +298,7 @@ def main_menu():
             menu_table.add_column(justify="left")
 
         # Dividir opções em colunas
-        rows = [options[i:i+cols] for i in range(0, len(options), cols)]
+        rows = [options[i:i + cols] for i in range(0, len(options), cols)]
         for row in rows:
             if len(row) < cols:
                 row.append("")
@@ -298,7 +307,7 @@ def main_menu():
         console.print(menu_table)
 
         choice = Prompt.ask("[green]Digite o número da opção desejada[/green]").strip()
-        
+
         if choice == "1":
             clear_screen()
             type_message("Ping Sweep: Varredura para identificar hosts ativos na rede local.")
@@ -312,7 +321,7 @@ def main_menu():
             try:
                 if '-' in ports_input:
                     start, end = ports_input.split('-')
-                    ports = list(range(int(start), int(end)+1))
+                    ports = list(range(int(start), int(end) + 1))
                 else:
                     ports = [int(p.strip()) for p in ports_input.split(',')]
                 port_scan(target, ports)
@@ -363,3 +372,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         clear_screen()
         console.print("[green]\nPrograma encerrado pelo usuário.[/green]")
+    
