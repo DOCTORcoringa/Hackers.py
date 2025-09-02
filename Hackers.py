@@ -10,20 +10,19 @@ import http.client
 from urllib.parse import urlparse
 from queue import Queue
 
-try:
-    from scapy.all import sniff, IP
-    has_scapy = True
-except ImportError:
-    has_scapy = False
-
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.align import Align
 from rich.table import Table
-from rich.text import Text
 
 console = Console()
+
+try:
+    from scapy.all import sniff, IP
+    has_scapy = True
+except ImportError:
+    has_scapy = False
 
 def type_message(message, delay=0.01, max_line_length=70):
     words = message.split()
@@ -55,7 +54,7 @@ def system_info():
     mem = psutil.virtual_memory()
     mem_used = mem.used / (1024 ** 2)
     mem_total = mem.total / (1024 ** 2)
-    return (hostname, ip_address, cpu_percent, mem_used, mem_total)
+    return hostname, ip_address, cpu_percent, mem_used, mem_total
 
 def ping(host):
     param = '-n' if os.name == 'nt' else '-c'
@@ -74,7 +73,7 @@ def ping_sweep(base_ip):
             console.print(f"[green][ATIVO][/green] {ip}")
             responsive_hosts.append(ip)
     threads = []
-    for i in range(1,255):
+    for i in range(1, 255):
         ip = f"{base_ip}.{i}"
         t = threading.Thread(target=ping_ip, args=(ip,))
         threads.append(t)
@@ -188,7 +187,6 @@ def packet_sniffer():
         pause()
         return
     try:
-        # Testa permissões para sniff
         sniff(prn=lambda pkt: None, store=0, timeout=1)
     except PermissionError:
         type_message("Permissão negada (root necessário) para executar sniffer. Está desabilitado.")
@@ -229,7 +227,7 @@ def simple_brute_force():
     for pw in passwords:
         console.print(f"[green]Tentando senha:[/green] {pw}")
         time.sleep(0.3)
-        if pw == "senha123":  # Demonstração da senha correta
+        if pw == "senha123":
             type_message(f"Senha CRACKED! Usuário: {user} Senha: {pw}")
             break
     else:
@@ -297,7 +295,6 @@ def main_menu():
         for _ in range(cols):
             menu_table.add_column(justify="left")
 
-        # Dividir opções em colunas
         rows = [options[i:i + cols] for i in range(0, len(options), cols)]
         for row in rows:
             if len(row) < cols:
