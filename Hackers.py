@@ -1,6 +1,4 @@
-
 import os
-import sys
 import socket
 import subprocess
 import threading
@@ -9,7 +7,6 @@ import time
 import requests
 import http.client
 from urllib.parse import urlparse
-from queue import Queue
 
 from rich.console import Console
 from rich.panel import Panel
@@ -45,8 +42,7 @@ def system_info():
         ip_address = socket.gethostbyname(hostname)
     except:
         ip_address = 'N/A'
-    # Substitui psutil.cpu_percent(interval=1) por 0 para evitar erro de permissão no Termux
-    cpu_percent = 0
+    cpu_percent = 0  # Evita erro no Termux sem permissão
     mem = psutil.virtual_memory()
     mem_used = mem.used / (1024 ** 2)
     mem_total = mem.total / (1024 ** 2)
@@ -194,7 +190,7 @@ def simple_brute_force():
     for pw in passwords:
         console.print(f"[green]Tentando senha:[/green] {pw}")
         time.sleep(0.3)
-        if pw == "senha123":  # Demonstração da senha correta
+        if pw == "senha123":  # Senha demo correta
             type_message(f"Senha CRACKED! Usuário: {user} Senha: {pw}")
             break
     else:
@@ -203,71 +199,65 @@ def simple_brute_force():
 
 def show_about():
     about_msg = """
-[bold green]██████╗ ██████╗  ██████╗ ███╗   ██╗██████╗ ██╗ █████╗ ██████╗ ███████╗[/bold green]
-[bold green]██╔══██╗██╔══██╗██╔═══██╗████╗  ██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝[/bold green]
-[bold green]██████╔╝██████╔╝██║   ██║██╔██╗ ██║██████╔╝██║███████║██████╔╝█████╗  [/bold green]
-[bold green]██╔═══╝ ██╔══██╗██║   ██║██║╚██╗██║██╔═══╝ ██║██╔══██║██╔══██╗██╔══╝  [/bold green]
-[bold green]██║     ██║  ██║╚██████╔╝██║ ╚████║██║     ██║██║  ██║██║  ██║███████╗[/bold green]
-[bold green]╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝[/bold green]
+[bold cyan]======== Doctor Coringa Lunático ========[/bold cyan]
 
-[green]Painel desenvolvido por Doctor Coringa Lunático
-Uso exclusivo para fins educacionais e aprendizado seguro
-Divirta-se explorando conceitos de segurança e hacking ético![/green]
+[green]Painel de segurança e aprendizado seguro.
+Uso exclusivo para fins educacionais.[/green]
+
+Contato:
+Telegram: [bold cyan]Doctor Coringa[/bold cyan]
+WhatsApp: [bold cyan]+55 85 9251-1842[/bold cyan]
+
+==========================================
 """
-    console.print(Panel(Align.center(about_msg), border_style="green"))
+    console.print(Panel(Align.center(about_msg), border_style="cyan"))
     pause()
 
 def main_menu():
     while True:
         clear_screen()
         hostname, ip, cpu, mem_used, mem_total = system_info()
-        banner = (
-            "[bold magenta]██████╗ ██████╗  ██████╗ ███╗   ██╗██████╗ ██╗ █████╗ ██████╗ ███████╗[/bold magenta]\n" +
-            "[bold magenta]██╔══██╗██╔══██╗██╔═══██╗████╗  ██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝[/bold magenta]\n" +
-            "[bold magenta]██████╔╝██████╔╝██║   ██║██╔██╗ ██║██████╔╝██║███████║██████╔╝█████╗  [/bold magenta]\n" +
-            "[bold magenta]██╔═══╝ ██╔══██╗██║   ██║██║╚██╗██║██╔═══╝ ██║██╔══██║██╔══██╗██╔══╝  [/bold magenta]\n" +
-            "[bold magenta]██║     ██║  ██║╚██████╔╝██║ ╚████║██║     ██║██║  ██║██║  ██║███████╗[/bold magenta]\n" +
-            "[bold magenta]╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝[/bold magenta]\n"
-        )
-        header_text = f"Bem-Vindo(a) ao [bold blue]Painel Doctor Coringa Lunático[/bold blue] | Uso Educacional Seguro"
-        ip_text = f"Seu Endereço de IP: [bold blue]{ip}[/bold blue]"
-
-        pix_info = "[bold green]PIX:[/bold green] 06acdb...629d"
-        contato_info = "Telegram: [bold cyan]@K_iny[/bold cyan] | WhatsApp: [bold cyan]+55 21 7918-0533[/bold cyan]"
-
+        banner = """
+██████╗ ██████╗  ██████╗ ███╗   ██╗██████╗ ██╗ █████╗ ██████╗ ███████╗
+██╔══██╗██╔══██╗██╔═══██╗████╗  ██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝
+██████╔╝██████╔╝██║   ██║██╔██╗ ██║██████╔╝██║███████║██████╔╝█████╗  
+██╔═══╝ ██╔══██╗██║   ██║██║╚██╗██║██╔═══╝ ██║██╔══██║██╔══██╗██╔══╝  
+██║     ██║  ██║╚██████╔╝██║ ╚████║██║     ██║██║  ██║██║  ██║███████╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+"""
+        header_text = "Painel Doctor Coringa Lunático | Uso Educacional Seguro"
+        ip_text = f"Seu Endereço de IP: {ip}"
         console.print(Panel(Align.center(banner), border_style="magenta"))
         console.print(Panel(header_text, border_style="blue"))
         console.print(Panel(ip_text, border_style="blue"))
-        console.print(Panel(pix_info, border_style="green"))
-        console.print(Panel(contato_info, border_style="cyan"))
+        console.print(Panel("Telegram: Doctor Coringa", border_style="cyan"))
+        console.print(Panel("WhatsApp: +55 85 9251-1842", border_style="cyan"))
 
         options = [
-            "Ping Sweep - Descoberta de Hosts",
-            "Scanner de Portas TCP",
-            "Consulta DNS",
-            "Brute Force Local",
-            "Mostrar Processos CPU",
-            "Informações de Rede",
-            "GeoIP Lookup",
-            "Enumeração HTTP",
-            "Sobre e Créditos",
-            "Sair"
+            "1 - Ping Sweep - Descoberta de Hosts",
+            "2 - Scanner de Portas TCP",
+            "3 - Consulta DNS",
+            "4 - Brute Force Local",
+            "5 - Mostrar Processos CPU",
+            "6 - Informações de Rede",
+            "7 - GeoIP Lookup",
+            "8 - Enumeração HTTP",
+            "9 - Sobre e Créditos",
+            "0 - Sair"
         ]
-
-        menu_table = Table.grid(padding=(0, 2))
-        menu_table.title = "[bold green]Menu Principal - Escolha a Opção[/bold green]"
-        menu_table.expand = False
+        table = Table.grid(padding=(0, 2))
+        table.title = "[bold green]Menu Principal - Escolha a Opção[/bold green]"
+        table.expand = False
         cols = 2
         for _ in range(cols):
-            menu_table.add_column(justify="left")
-
+            table.add_column(justify="left")
         rows = [options[i:i + cols] for i in range(0, len(options), cols)]
         for row in rows:
             if len(row) < cols:
                 row.append("")
-            menu_table.add_row(*row)
+            table.add_row(*row)
 
-        console.print(menu_table)
+        console.print(table)
 
         choice = Prompt.ask("[green]Digite o número da opção desejada[/green]").strip()
 
@@ -282,11 +272,11 @@ def main_menu():
             target = Prompt.ask("IP ou Hostname alvo").strip()
             ports_input = Prompt.ask("Portas (ex: 22,80,443 ou 20-1024)").strip()
             try:
-                if '-' in ports_input:
-                    start, end = ports_input.split('-')
+                if "-" in ports_input:
+                    start, end = ports_input.split("-")
                     ports = list(range(int(start), int(end) + 1))
                 else:
-                    ports = [int(p.strip()) for p in ports_input.split(',')]
+                    ports = [int(p.strip()) for p in ports_input.split(",")]
                 port_scan(target, ports)
             except Exception as e:
                 type_message(f"Entrada inválida para portas: {e}")
@@ -318,7 +308,7 @@ def main_menu():
         elif choice == "9":
             clear_screen()
             show_about()
-        elif choice == "10" or choice.lower() == "q":
+        elif choice == "0" or choice.lower() == "q":
             clear_screen()
             type_message("Obrigado por usar o Painel Doctor Coringa Lunático. Fique seguro e continue aprendendo!")
             break
@@ -331,4 +321,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         clear_screen()
         console.print("[green]\nPrograma encerrado pelo usuário.[/green]")
-            
+                
