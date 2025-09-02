@@ -240,16 +240,16 @@ def main_menu():
         console.print(Panel(contato_info, border_style="cyan"))
 
         options = [
-            "1 - Ping Sweep - Descoberta de Hosts",
-            "2 - Scanner de Portas TCP",
-            "3 - Consulta DNS",
-            "4 - Brute Force Local",
-            "5 - Mostrar Processos CPU",
-            "6 - Informações de Rede",
-            "7 - GeoIP Lookup",
-            "8 - Enumeração HTTP",
-            "9 - Sobre e Créditos",
-            "0 - Sair"
+            "Ping Sweep - Descoberta de Hosts",
+            "Scanner de Portas TCP",
+            "Consulta DNS",
+            "Brute Force Local",
+            "Mostrar Processos CPU",
+            "Informações de Rede",
+            "GeoIP Lookup",
+            "Enumeração HTTP",
+            "Sobre e Créditos",
+            "Sair"
         ]
 
         menu_table = Table.grid(padding=(0, 2))
@@ -316,7 +316,7 @@ def main_menu():
         elif choice == "9":
             clear_screen()
             show_about()
-        elif choice == "0" or choice.lower() == "q":
+        elif choice == "10" or choice.lower() == "q":
             clear_screen()
             type_message("Obrigado por usar o Painel Doctor Coringa Lunático. Fique seguro e continue aprendendo!")
             break
@@ -329,4 +329,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         clear_screen()
         console.print("[green]\nPrograma encerrado pelo usuário.[/green]")
-    
+        
